@@ -3,9 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
     initLoginForm();
     initRegisterForm();
     loadDashboardData();
+    initProfilePictureUpload();
 });
 
-// 1. Update Navigation Bar
+// 1. Update Navigation Area across pages
 function updateNavigation() {
     const navAuthArea = document.getElementById("navAuthArea");
     if (!navAuthArea) return;
@@ -27,7 +28,7 @@ function updateNavigation() {
     }
 }
 
-// 2. Handle Registration Form Submission (Redirects to Login Page)
+// 2. Handle Registration (Validates Password Match & Redirects to Login)
 function initRegisterForm() {
     const registerForm = document.getElementById("registerForm");
     if (!registerForm) return;
@@ -46,7 +47,7 @@ function initRegisterForm() {
             errorDiv.style.color = "var(--red)";
         }
 
-        // Validate password match
+        // Validate password confirmation
         if (password !== confirmPassword) {
             if (errorDiv) errorDiv.textContent = "Passwords do not match.";
             return;
@@ -66,12 +67,12 @@ function initRegisterForm() {
             return;
         }
 
-        // Save new user
-        const newUser = { fullName, email, password };
+        // Save registered user
+        const newUser = { fullName, email, password, avatar: null };
         users.push(newUser);
         localStorage.setItem("cyberverse_users", JSON.stringify(users));
 
-        // Redirect to Login Page
+        // Redirect to Login Page on success
         window.location.href = "login.html";
     });
 }
@@ -98,7 +99,7 @@ function initLoginForm() {
             window.location.href = "dashboard.html";
         } else {
             if (email && password.length >= 6) {
-                const sessionUser = { fullName: email.split('@')[0], email: email };
+                const sessionUser = { fullName: email.split('@')[0], email: email, avatar: null };
                 localStorage.setItem("currentUser", JSON.stringify(sessionUser));
                 window.location.href = "dashboard.html";
             } else if (errorDiv) {
@@ -109,7 +110,7 @@ function initLoginForm() {
     });
 }
 
-// 4. Load Dynamic User Info on Dashboard Page
+// 4. Load Dashboard Info & Saved Profile Image
 function loadDashboardData() {
     const userNameElement = document.getElementById("userName");
     const userEmailElement = document.getElementById("userEmail");
@@ -124,6 +125,9 @@ function loadDashboardData() {
             userEmailElement.textContent = currentUser.email;
             userEmailElement.style.color = "var(--muted)";
         }
+        
+        // Render current avatar if present
+        renderProfilePicture(currentUser.avatar);
     } else {
         window.location.href = "login.html";
     }
@@ -137,7 +141,69 @@ function loadDashboardData() {
     }
 }
 
-// 5. Logout Handler
+// 5. Settings: Profile Picture Upload Handler
+function initProfilePictureUpload() {
+    const openSettingsBtn = document.getElementById("openSettingsBtn");
+    const profilePicInput = document.getElementById("profilePicInput");
+
+    if (!openSettingsBtn || !profilePicInput) return;
+
+    openSettingsBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        profilePicInput.click();
+    });
+
+    profilePicInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const base64Image = event.target.result;
+
+            // Update current active session
+            const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+            currentUser.avatar = base64Image;
+            localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+            // Update user in main array
+            const users = JSON.parse(localStorage.getItem("cyberverse_users")) || [];
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex].avatar = base64Image;
+                localStorage.setItem("cyberverse_users", JSON.stringify(users));
+            }
+
+            // Render updated picture immediately
+            renderProfilePicture(base64Image);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+// 6. Helper: Display Profile Picture or Fallback SVG
+function renderProfilePicture(avatarData) {
+    const avatarImg = document.getElementById("userAvatarImg");
+    const defaultSvg = document.getElementById("defaultAvatarSvg");
+
+    if (!avatarImg || !defaultSvg) return;
+
+    if (avatarData) {
+        avatarImg.src = avatarData;
+        avatarImg.style.display = "block";
+        avatarImg.style.width = "100%";
+        avatarImg.style.height = "100%";
+        avatarImg.style.objectFit = "cover";
+        avatarImg.style.borderRadius = "50%";
+        defaultSvg.style.display = "none";
+    } else {
+        avatarImg.style.display = "none";
+        defaultSvg.style.display = "block";
+    }
+}
+
+// 7. Logout Handler
 function logout() {
     localStorage.removeItem("currentUser");
     window.location.href = "index.html";
