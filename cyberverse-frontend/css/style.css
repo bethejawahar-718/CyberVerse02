@@ -1,50 +1,37 @@
+/* ==========================================================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================================================== */
 :root {
-    --bg: #050807;
-    --panel: #0b110e;
-    --panel-light: #101812;
-
-    --green: #39ff8e;
-    --blue: #4dd8ff;
-    --red: #ff4d6d;
-
-    --text: #e8f5ec;
-    --muted: #8b9b90;
-
-    --border: rgba(57, 255, 142, 0.18);
-
-    --font-main: Arial, Helvetica, sans-serif;
-    --font-mono: "Courier New", monospace;
+    --bg-dark: #0a0c10;
+    --card-bg: rgba(18, 22, 31, 0.75);
+    --border: #1f293d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --green: #2ea043;
+    --green-glow: rgba(46, 160, 67, 0.4);
+    --red: #f85149;
+    --primary: #238636;
+    --primary-hover: #2ea043;
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
 }
 
 body {
-    background: var(--bg);
+    background-color: var(--bg-dark);
     color: var(--text);
-    font-family: var(--font-main);
+    font-family: var(--font-family);
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
+    line-height: 1.5;
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button,
-input {
-    font-family: inherit;
-}
-
-/* MATRIX CANVAS (Hacker theme background) */
+/* Background Canvas for Matrix Effect */
 #matrixCanvas {
     position: fixed;
     top: 0;
@@ -52,42 +39,44 @@ input {
     width: 100vw;
     height: 100vh;
     z-index: -1;
+    opacity: 0.15;
     pointer-events: none;
-    opacity: 0.35;
 }
 
-/* NAVBAR */
+/* ==========================================================================
+   2. NAVBAR & NAVIGATION
+   ========================================================================== */
 .navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 6%;
-    background: rgba(5, 8, 7, 0.92);
+    padding: 1rem 2rem;
+    background: rgba(10, 12, 16, 0.85);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.logo {
-    font-family: var(--font-mono);
-    font-size: 21px;
-    font-weight: bold;
+.logo a {
+    font-size: 1.25rem;
+    font-weight: 700;
     color: var(--text);
-    text-transform: none !important;
+    text-decoration: none;
+    letter-spacing: 0.5px;
 }
 
-.logo span {
+.logo a:hover {
     color: var(--green);
 }
 
-/* PROFILE DROPDOWN MENU */
+/* Profile Dropdown Container */
 .profile-dropdown {
     position: relative;
-    display: inline-block;
 }
 
+/* Updated Avatar Button - Support for Uploaded Profile Pictures */
 .avatar-btn {
     background: transparent;
     border: 1px solid var(--border);
@@ -100,26 +89,36 @@ input {
     justify-content: center;
     cursor: pointer;
     transition: all 0.25s ease;
+    overflow: hidden;
+    padding: 0;
 }
 
 .avatar-btn:hover {
     border-color: var(--green);
-    color: var(--green);
-    box-shadow: 0 0 12px rgba(57, 255, 142, 0.2);
+    box-shadow: 0 0 8px var(--green-glow);
 }
 
+.avatar-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Dropdown Menu */
 .dropdown-content {
     display: none;
     position: absolute;
     right: 0;
-    top: calc(100% + 12px);
-    width: 200px;
-    background: var(--panel);
+    top: 50px;
+    background: rgba(18, 22, 31, 0.95);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    padding: 8px 0;
-    z-index: 200;
+    border-radius: 8px;
+    min-width: 180px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow: hidden;
 }
 
 .dropdown-content.show {
@@ -128,230 +127,228 @@ input {
 
 .dropdown-content a {
     display: block;
-    padding: 10px 20px;
+    padding: 10px 16px;
     color: var(--text);
-    font-size: 14px;
-    transition: 0.2s ease;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
 }
 
 .dropdown-content a:hover {
-    background: var(--panel-light);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--green);
-    padding-left: 24px;
 }
 
-.dropdown-content a.dropdown-logout {
-    color: var(--red);
+.dropdown-content .dropdown-logout {
     border-top: 1px solid var(--border);
-    margin-top: 6px;
-    padding-top: 12px;
+    color: var(--red);
 }
 
-.dropdown-content a.dropdown-logout:hover {
-    color: #ff6b8b;
-    background: rgba(255, 77, 109, 0.1);
+.dropdown-content .dropdown-logout:hover {
+    background: rgba(248, 81, 73, 0.1);
+    color: var(--red);
 }
 
-/* BUTTONS */
+/* ==========================================================================
+   3. BUTTONS & UI COMPONENTS
+   ========================================================================== */
 .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 7px;
-    padding: 12px 20px;
-    border: 1px solid transparent;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.25s;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
 }
 
 .btn-primary {
-    background: var(--green);
-    color: #031007;
+    background-color: var(--primary);
+    color: #ffffff;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 25px rgba(57, 255, 142, 0.35);
+    background-color: var(--primary-hover);
 }
 
 .btn-ghost {
-    border-color: var(--border);
     background: transparent;
     color: var(--text);
+    border-color: var(--border);
 }
 
 .btn-ghost:hover {
+    border-color: var(--muted);
+}
+
+/* ==========================================================================
+   4. DASHBOARD CONTAINER & LAYOUT
+   ========================================================================== */
+.dashboard-container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-label {
+    font-family: monospace;
     color: var(--green);
-    border-color: var(--green);
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
 }
 
-.btn-outline {
-    border-color: var(--green);
-    color: var(--green);
-    background: transparent;
+.dashboard-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
 }
 
-.btn-outline:hover {
-    background: var(--green);
-    color: #031007;
+.dashboard-header #userEmail {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
 }
 
-.nav-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-/* HERO */
-.hero {
-    min-height: 700px;
-    max-width: 1250px;
-    margin: auto;
-    padding: 100px 6%;
+/* Dashboard Cards / Grid */
+.dashboard-stats {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items: center;
-    gap: 60px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
-.terminal-label {
-    color: var(--green);
-    font-family: var(--font-mono);
-    margin-bottom: 20px;
-}
-
-.hero h1 {
-    font-size: clamp(42px, 6vw, 76px);
-    line-height: 1.05;
-    margin-bottom: 25px;
-}
-
-.hero h1 span {
-    display: block;
-    color: var(--green);
-}
-
-.hero-text {
-    color: var(--muted);
-    font-size: 18px;
-    line-height: 1.7;
-    max-width: 650px;
-}
-
-.hero-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: 35px;
-}
-
-/* TERMINAL */
-.terminal {
-    border: 1px solid var(--border);
-    background: rgba(11, 17, 14, 0.92);
-    border-radius: 12px;
-    box-shadow: 0 0 50px rgba(57, 255, 142, 0.08);
-    overflow: hidden;
-}
-
-.terminal-header {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 13px 16px;
-    border-bottom: 1px solid var(--border);
-    font-family: var(--font-mono);
-}
-
-.terminal-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--muted);
-}
-
-.terminal-title {
-    margin-left: 10px;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.terminal-body {
-    padding: 25px;
-    font-family: var(--font-mono);
-    line-height: 2;
-}
-
-.green {
-    color: var(--green);
-}
-
-.output {
-    color: var(--muted);
-    margin-left: 15px;
-}
-
-/* STATS */
-.stats {
-    max-width: 1200px;
-    margin: auto;
-    padding: 40px 6%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-}
-
-.stat-card {
-    padding: 30px;
-    text-align: center;
-    background: var(--panel);
+.dashboard-card {
+    background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
 }
 
-.stat-card h2 {
+.dashboard-card span {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-card h2 {
+    font-size: 1.8rem;
     color: var(--green);
-    font-size: 38px;
-    margin-bottom: 8px;
 }
 
-.stat-card p {
+.dashboard-card p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Progress Section */
+.progress-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.progress-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    transition: width 0.4s ease;
+}
+
+#progressText {
+    font-size: 0.85rem;
     color: var(--muted);
 }
 
-/* FOOTER */
-footer {
-    border-top: 1px solid var(--border);
-    padding: 40px 6%;
+/* Modules Section */
+.modules h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.module-list {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.module-row {
+    display: flex;
     align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    gap: 1.25rem;
+}
+
+.module-row > span {
+    font-family: monospace;
+    font-weight: bold;
+    color: var(--green);
+    font-size: 1.1rem;
+}
+
+.module-row div {
+    flex: 1;
+}
+
+.module-row h3 {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+}
+
+.module-row p {
+    font-size: 0.85rem;
     color: var(--muted);
 }
 
-.copyright {
-    font-family: var(--font-mono);
-    font-size: 13px;
+.module-btn {
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* RESPONSIVE LAYOUT BREAKPOINTS */
-@media (max-width: 900px) {
-    .hero {
-        grid-template-columns: 1fr;
-        padding-top: 60px;
-        min-height: auto;
-    }
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.module-btn:hover {
+    background: var(--green);
+    color: #ffffff;
 }
 
-@media (max-width: 500px) {
-    .stats {
-        grid-template-columns: 1fr;
+/* Responsive Rules */
+@media (max-width: 600px) {
+    .module-row {
+        flex-direction: column;
+        align-items: flex-start;
     }
-
-    .navbar {
-        padding: 14px 4%;
+    
+    .module-btn {
+        width: 100%;
+        margin-top: 0.5rem;
     }
 }
