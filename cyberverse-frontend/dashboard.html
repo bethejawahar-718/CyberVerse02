@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberVerse — Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <header class="navbar">
+
+     <div class="logo">
+            CyberVerse
+        </div>
+
+        <div class="profile-dropdown">
+            <button id="avatarBtn" class="avatar-btn" aria-label="User Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+            </button>
+            
+            <div id="dropdownMenu" class="dropdown-content">
+                <a href="index.html">Home</a>
+                <a href="roadmaps.html">Roadmaps</a>
+                <a href="courses.html">Courses</a>
+                <a href="labs.html">Labs</a>
+                <a href="ai-mentors.html">AI Mentors</a>
+                <a href="#" id="logoutBtn" class="dropdown-logout">Logout</a>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="dashboard-header">
+            <div>
+                <p class="dashboard-label">// USER DASHBOARD</p>
+                <h1>Welcome, <span id="userName">Student</span></h1>
+                <p id="userEmail"></p>
+            </div>
+        </section>
+
+        <section class="dashboard-stats">
+            <div class="dashboard-card">
+                <span>📚</span>
+                <h2 id="completedLessons">0</h2>
+                <p>Lessons Completed</p>
+            </div>
+
+            <div class="dashboard-card">
+                <span>🧪</span>
+                <h2 id="completedLabs">0</h2>
+                <p>Labs Completed</p>
+            </div>
+
+            <div class="dashboard-card">
+                <span>🎯</span>
+                <h2 id="quizScore">0%</h2>
+                <p>Quiz Average</p>
+            </div>
+        </section>
+
+        <section class="progress-section">
+            <h2>Your Learning Progress</h2>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <p id="progressText">0% completed</p>
+        </section>
+
+        <section class="modules">
+            <h2>Learning Modules</h2>
+
+            <div class="module-list">
+                <div class="module-row">
+                    <span>01</span>
+                    <div>
+                        <h3>Cybersecurity Fundamentals</h3>
+                        <p>Computers, networks and security basics.</p>
+                    </div>
+                    <button class="module-btn">Start</button>
+                </div>
+
+                <div class="module-row">
+                    <span>02</span>
+                    <div>
+                        <h3>Security Hygiene</h3>
+                        <p>Passwords, MFA and safe browsing.</p>
+                    </div>
+                    <button class="module-btn">Start</button>
+                </div>
+
+                <div class="module-row">
+                    <span>03</span>
+                    <div>
+                        <h3>Common Cyber Threats</h3>
+                        <p>Phishing, malware and social engineering.</p>
+                    </div>
+                    <button class="module-btn">Start</button>
+                </div>
+
+                <div class="module-row">
+                    <span>04</span>
+                    <div>
+                        <h3>Defense Basics</h3>
+                        <p>Firewalls, encryption and authentication.</p>
+                    </div>
+                    <button class="module-btn">Start</button>
+                </div>
+
+                <div class="module-row">
+                    <span>05</span>
+                    <div>
+                        <h3>Practical Security Labs</h3>
+                        <p>Practice cybersecurity concepts.</p>
+                    </div>
+                    <button class="module-btn">Start</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        const avatarBtn = document.getElementById('avatarBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        avatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            if (dropdownMenu.classList.contains('show')) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    </script>
+
+</body>
+</html>
